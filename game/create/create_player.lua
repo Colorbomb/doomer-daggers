@@ -8,14 +8,22 @@ function create_player()
 	player.update = playerupdate
 	player.draw = playerdraw
 	player.angle = 0
+	player.speed = 0
+	player.walk = 10
+	player.sprint = player.walk *1.5
 end
 
 
 function playerupdate(o)
+	if keyboard.btns.lshift.down == 1 then
+		o.speed = o.sprint
+	else
+		o.speed = o.walk
+	end
 	if keyboard.btns.w.down == 1 then
-		o.vel.x = 1
+		o.vel.x = o.speed
 	elseif keyboard.btns.s.down == 1 then
-		o.vel.x = -1
+		o.vel.x = -o.speed
 	elseif keyboard.btns.s.down == 1 and keyboard.btns.w.down == 1 then
 		o.vel.x = 0
 	else
@@ -23,21 +31,22 @@ function playerupdate(o)
 	end
 
 	if keyboard.btns.d.down == 1 then
-		o.vel.y = -1
+		o.vel.y = -o.speed
 	elseif keyboard.btns.a.down == 1 then 
-		o.vel.y = 1
+		o.vel.y = o.speed
 	elseif keyboard.btns.d.down == 1 and keyboard.btns.a.down == 1 then
 		o.vel.y = 0
 	else
 		o.vel.y = 0
 	end
+
 	o.vel2.x = o.vel.x*math.cos(o.angle) + o.vel.y*math.sin(o.angle)
 	o.vel2.y = -o.vel.y*math.cos(o.angle) + o.vel.x*math.sin(o.angle)
 
 	o.pos.x = o.pos.x + o.vel2.x
 	o.pos.y = o.pos.y + o.vel2.y
 
-	o.angle = o.angle + mouse.vel.x/60
+	o.angle = (o.angle + mouse.vel.x/60)%(2*math.pi)
 	camera.pos.x = o.pos.x
 	camera.pos.y = o.pos.y
 	camera.angle = o.angle

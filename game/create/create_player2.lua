@@ -38,9 +38,7 @@ function player2update(o)
 	o.pos.y = o.pos.y + o.vel2.y
 
 	o.angle = o.angle + mouse.vel.x/60
-	camera.pos.x = o.pos.x
-	camera.pos.y = o.pos.y
-	camera.angle = o.angle
+
 
 end
 

@@ -1,16 +1,20 @@
-function create_enemy(x,y)
+function create_enemy(x,y,z,i)
 	enemy = newobj("enemy",1)
-	enemy.pos = {x=x,y=y,z=0}
+	enemy.pos = {x=x,y=y,z=z}
 	enemy.vel = {x=0,y=0,z=0}
 	enemy.rad = 1
+	enemy.ID = i
 	enemy.color = {1,0,1}
-	enemy.update = enemyrupdate
+	enemy.update = enemyupdate
 	enemy.draw = enemydraw
+	enemy.timer = 0
 	enemy.angle = 0
 end
 
 
 function enemyupdate(o)
+	o.timer = o.timer + love.timer.getDelta()
+	o.pos.z = 10*math.sin(o.timer*2 + o.ID)
 	o.pos.x = o.pos.x + o.vel.x
 	o.pos.y = o.pos.y + o.vel.y
 end
@@ -19,6 +23,29 @@ end
 function enemydraw(o)
 	circle3D("fill",o.pos.x,o.pos.y,o.pos.z,o.rad,o.color)
 end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 function create_enemy2(x,y)
 	enemy2 = newobj("enemy",1)

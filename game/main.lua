@@ -3,13 +3,14 @@ function love.load()
 	initializer("fullscreen",800,600) -- this line, and the line above, MUST be run in order to access all of the functions in the library.
 	create_player()
 	for i=1, 10 do
-		create_enemy(100,10*(i-1))
+		--create_enemy(100,10*(i-1),1*(i-1),i)
 	end
 	
-	create_player2()
+	--create_player2()
 	for i=1, 10 do
-		create_enemy2(100,10*(i-1))
+		--create_enemy2(100,10*(i-1),1*(i-1))
 	end
+	create_field(1000,40,40)
 end
 function love.mousemoved( x, y, dx, dy, istouch )
 
