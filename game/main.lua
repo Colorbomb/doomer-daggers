@@ -1,13 +1,26 @@
 function love.load()
 	require("color_library.initialize.initializer")
-	initializer("window",800,600) -- this line, and the line above, MUST be run in order to access all of the functions in the library.
+	initializer("fullscreen",800,600) -- this line, and the line above, MUST be run in order to access all of the functions in the library.
 	create_player()
-	create_enemy()
+	for i=1, 10 do
+		create_enemy(100,10*(i-1))
+	end
+	
+	create_player2()
+	for i=1, 10 do
+		create_enemy2(100,10*(i-1))
+	end
 end
+function love.mousemoved( x, y, dx, dy, istouch )
 
+	mouse.vel.x = dx
+	mouse.vel.y = dy
+end
 
 function love.update(dt)
 	list:updateall() --updates everything in the updatelist
+	mouse.vel.x = 0
+	mouse.vel.y = 0
 end
 
 --in lua, the syntax for running an object's function with the object itself being the first input argument is object:function()

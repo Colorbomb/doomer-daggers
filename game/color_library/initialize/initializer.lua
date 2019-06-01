@@ -21,6 +21,10 @@ function initializer(fulls,width,height)
 	
 	require("create.create_player")
 	require("create.create_enemy")
+	require("create.create_player2")
+
+
+	require("draw.circle3D")
 
 	
 

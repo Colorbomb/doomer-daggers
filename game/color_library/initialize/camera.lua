@@ -4,6 +4,8 @@ function create_camera()
 		pos = {x = 0,y = 0},
 		offset = 0,
 		offsetangle = 0,
+		angle = 0,
+		fov = 90,
 		update = function(self)
 			--if you want camera controls, put them here
 		end

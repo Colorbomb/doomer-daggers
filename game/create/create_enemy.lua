@@ -1,8 +1,8 @@
-function create_enemy()
+function create_enemy(x,y)
 	enemy = newobj("enemy",1)
-	enemy.pos = {x=s.w2 + 100,y=s.h2,z=0}
+	enemy.pos = {x=x,y=y,z=0}
 	enemy.vel = {x=0,y=0,z=0}
-	enemy.rad = 10
+	enemy.rad = 1
 	enemy.color = {1,0,1}
 	enemy.update = enemyrupdate
 	enemy.draw = enemydraw
@@ -17,5 +17,29 @@ end
 
 
 function enemydraw(o)
-	circle("fill",o.pos.x,o.pos.y,o.rad,o.color)
+	circle3D("fill",o.pos.x,o.pos.y,o.pos.z,o.rad,o.color)
+end
+
+function create_enemy2(x,y)
+	enemy2 = newobj("enemy",1)
+	enemy2.pos = {x=x,y=y,z=0}
+	enemy2.vel = {x=0,y=0,z=0}
+	enemy2.rad = 1
+	enemy2.color = {1,0,1}
+	enemy2.update = enemyrupdate2
+	enemy2.draw = enemydraw2
+	enemy2.angle = 0
+end
+
+
+function enemyupdate2(o)
+	o.pos.x = o.pos.x + o.vel.x
+	o.pos.y = o.pos.y + o.vel.y
+end
+
+
+function enemydraw2(o)
+	love.graphics.setColor(1,0,0)
+	love.graphics.circle("fill",s.w2+o.pos.x,s.h2+o.pos.y,5)
+	love.graphics.setColor(1,1,1)
 end

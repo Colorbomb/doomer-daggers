@@ -1,4 +1,5 @@
 function initialize_input()
+	love.mouse.setRelativeMode(true)
 	mouse = {
 		pos = {x = 0, y = 0},
 		vel = {x = 0, y = 0},
@@ -9,12 +10,10 @@ function initialize_input()
 
 		update = function(self)
 			self:unpulse()
-			local prevx = self.pos.x
-			local prevy = self.pos.y
+
 			self.pos.x = love.mouse.getX() - camera.pos.x
 			self.pos.y = s.h - love.mouse.getY() - camera.pos.y
-			self.vel.x = self.pos.x - prevx
-			self.vel.y = self.pos.y - prevy
+
 
 			if love.mouse.isDown(1) then
 				if self.button1.down == 0 then
@@ -127,6 +126,8 @@ function initialize_input()
 	table.insert(list.update, keyboard)
 
 end
+
+
 
 --[[
 	
