@@ -23,10 +23,15 @@ function initializer(fulls,width,height)
 	require("create.create_enemy")
 	require("create.create_player2")
 	require("create.create_field")
+	require("create.create_collider")
 
 
 	require("draw.circle3D")
 	require("draw.line3D")
+	require("draw.sprite3D")
+
+
+	require("sprites.loadsprites")
 
 	
 
