@@ -3,8 +3,8 @@ function love.load()
 	initializer("fullscreen",800,600) -- this line, and the line above, MUST be run in order to access all of the functions in the library.
 	create_collider()
 	create_player()
-	for i=1, 10 do
-		create_enemy(100,200*(i-1),100,i)
+	for i=1, 2 do
+		create_enemy(100,200*(i-1)-200,100,i)
 	end
 	
 	--create_player2()

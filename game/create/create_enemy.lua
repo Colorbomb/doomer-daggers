@@ -17,7 +17,7 @@ function create_enemy(x,y,z,i)
 	enemy.targetangle = 0
 	enemy.mspeed = 2
 	enemy.state = "idle"
-	enemy.aggrorange = 500
+	enemy.aggrorange = 5
 	enemy.crad = 20
 	enemy.speed = 0
 	enemy.acceleration = 2/30
@@ -70,9 +70,9 @@ end
 function enemydraw(o)
 	--circle3D("fill",o.pos.x,o.pos.y,o.pos.z,o.rad,o.color)
 	if o.state == "idle" then
-		o.sprite.animations.idle:anim(o.pos.x,o.pos.y,o.pos.z,0,.15,.15,24)
+		o.sprite.animations.idle:anim(o.angle,o.pos.x,o.pos.y,o.pos.z,0,.15,.15,1)
 	elseif o.state == "chase" then
-		o.sprite.animations.walk:anim(o.pos.x,o.pos.y,o.pos.z,0,.15,.15,24)
+		o.sprite.animations.walk:anim(o.angle,o.pos.x,o.pos.y,o.pos.z,0,.15,.15,1)
 	end
 	love.graphics.setColor(1,1,1)
 

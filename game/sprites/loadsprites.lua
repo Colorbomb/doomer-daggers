@@ -1,77 +1,69 @@
 function loadsprite(spritename)
-if spritename == "enemy" then
+	if spritename == "enemy" then
 		local sprite = {
-			img = love.graphics.newImage("sprites/phi_idle.png"),
 			animations = {
-				idle = 	{
-					name = "idle",
-					numframes = 1,
-					w = 908,
-					h = 839,
-					img = love.graphics.newImage("sprites/phi_idle.png"),
-					quads = loadquads(908,839,love.graphics.newImage("sprites/phi_idle.png"),1),
-					frame = 1,
-					iterator = 1,
-					rate = 10,
-					
-					anim = function(self,x,y,z,r,sx,sy,speed)
-						
-						if speed ~= 0 then
-							speed = speed/2
-							self.rate = speed
-							self.iterator = self.iterator + 1
-							if self.iterator >= self.rate then
-								self.frame = self.frame + math.ceil(self.iterator-self.rate)
-								self.iterator = 1						
-							end
-							if self.frame > #self.quads then
-								self.frame = 1
-							end
-							sprite3D(self.img,self.quads[self.frame],x,y,z,sx,r,self.w,self.h)
-						else
-							sprite3D(self.img,self.quads[self.frame],x,y,z,sx,r,self.w,self.h)
-							self.iterator = 1
-						end
-					end,
-				},
-				walk = 	{
-					name = "walk",
-					numframes = 2,
-					w = 400,
-					h = 900,
-					img = love.graphics.newImage("sprites/enemywalk/spritesheettest.png"),
-					quads = loadquads(400,900,love.graphics.newImage("sprites/enemywalk/spritesheettest.png"),2),
-					frame = 1,
-					iterator = 1,
-					rate = 10,
-					
-					anim = function(self,x,y,z,r,sx,sy,speed)
-						
-						if speed ~= 0 then
-							self.rate = speed
-							self.iterator = self.iterator + 1
-							if self.iterator >= self.rate then
-								self.frame = self.frame + 1-- + math.ceil(self.iterator-self.rate)
-								self.iterator = 1						
-							end
-							if self.frame > #self.quads then
-								self.frame = 1
-							end
-							sprite3D(self.img,self.quads[self.frame],x,y,z,sx,r,self.w,self.h)
-							--printer3D(self.frame,x,y,z)
-						else
-							sprite3D(self.img,self.quads[self.frame],x,y,z,sx,r,self.w,self.h)
-							self.iterator = 1
-						end
-					end,
-				}	
+				idle = loadanim("sprites/enemy/idle",1),
+				walk = loadanim("sprites/enemy/walk",2),
+				}
+			}
+		return sprite
+	end
+end
+
+function loadanim(filepath,numframes)
+	local based = love.graphics.newImage(filepath.."/base.png")
+	local files = love.filesystem.getDirectoryItems(filepath)
+	local spritesheets = {}
+	for i=1, #files-1 do
+		spritesheets[i] = love.graphics.newImage(filepath.."/spritesheet"..i..".png")
+	end
+	local width = based:getWidth()
+	local height = based:getHeight()
+	local quadz = {}
+	for i=1, #files-1 do
+		quadz[i] = loadquads(width,height,spritesheets[i],numframes)
+	end
+	local animation = {
+			base = based,
+			numframes = numframes,
+			numangles = #files-1,
+			slicesize = (2*math.pi)/(#files-1),
+			w = width,
+			h = height,
+			imgs = spritesheets,
+			quads = quadz,
+			frame = 1,
+			iterator = 1,
+			rate = 10,
+			anim = function(self,angle,x,y,z,r,s,speed)
+				local viewangle = (math.atan2((camera.pos.y - y),(camera.pos.x - x))%(2*math.pi)-(angle))%(2*math.pi)
+				local diff = (viewangle-self.slicesize/2)
+				--if diff < 0 then 
+				--	diff = diff + 2*math.pi
+				--end
+
+				local k = math.floor(((viewangle-self.slicesize/2)%(2*math.pi))/self.slicesize)
+				if k == 0 then k = self.numangles end
+				printer3D(k,x,y,z-150)
+				print(k)
+				if speed ~= 0 then
+					self.rate = speed
+					self.iterator = self.iterator + 1
+					if self.iterator >= self.rate then
+						self.iterator = 1						
+					end
+					if self.frame > #self.quads then
+						self.frame = 1
+					end
+					sprite3D(self.imgs[k],self.quads[k][self.frame],x,y,z,s,r,self.w,self.h)
+				else
+					sprite3D(self.imgs[k],self.quads[k][self.frame],x,y,z,s,r,self.w,self.h)
+					self.iterator = 1
+				end
+			end,
 		}
-	}
-	return sprite
-
+		return animation
 end
-end
-
 
 function loadquads(w,h,sprite,numframes)
 	local size
