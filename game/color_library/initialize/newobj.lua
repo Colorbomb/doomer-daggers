@@ -20,6 +20,7 @@ function kill_object(o)
 	if o.update ~= nil then
 		for i=1, #list.update do
 			if list.update[i].hash == o.hash then
+				print("ded")
 				table.remove(list.update, i)
 				break
 			end

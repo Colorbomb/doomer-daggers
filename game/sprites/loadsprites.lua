@@ -15,7 +15,7 @@ function loadanim(filepath,numframes)
 	local files = love.filesystem.getDirectoryItems(filepath)
 	local spritesheets = {}
 	for i=1, #files-1 do
-		spritesheets[i] = love.graphics.newImage(filepath.."/spritesheet"..i..".png")
+		spritesheets[i] = love.graphics.newImage(filepath.."/ ("..i..").png")
 	end
 	local width = based:getWidth()
 	local height = based:getHeight()
@@ -23,6 +23,7 @@ function loadanim(filepath,numframes)
 	for i=1, #files-1 do
 		quadz[i] = loadquads(width,height,spritesheets[i],numframes)
 	end
+	--print(width,height,filepath)
 	local animation = {
 			base = based,
 			numframes = numframes,
@@ -37,15 +38,17 @@ function loadanim(filepath,numframes)
 			rate = 10,
 			anim = function(self,angle,x,y,z,r,s,speed)
 				local viewangle = (math.atan2((camera.pos.y - y),(camera.pos.x - x))%(2*math.pi)-(angle))%(2*math.pi)
+				--local viewangle2 = math.atan2((camera.pos.y - y),(camera.pos.x - x))%(2*math.pi) - (camera.angle)%(2*math.pi)
+				--viewangle = viewangle
 				local diff = (viewangle-self.slicesize/2)
 				--if diff < 0 then 
 				--	diff = diff + 2*math.pi
 				--end
 
-				local k = math.floor(((viewangle-self.slicesize/2)%(2*math.pi))/self.slicesize)
+				local k = self.numangles - math.floor(((viewangle-self.slicesize/2)%(2*math.pi))/self.slicesize)
 				if k == 0 then k = self.numangles end
-				printer3D(k,x,y,z-150)
-				print(k)
+				
+				--print(k)
 				if speed ~= 0 then
 					self.rate = speed
 					self.iterator = self.iterator + 1
@@ -56,6 +59,7 @@ function loadanim(filepath,numframes)
 						self.frame = 1
 					end
 					sprite3D(self.imgs[k],self.quads[k][self.frame],x,y,z,s,r,self.w,self.h)
+					--printer3D(math.deg(viewangle),x,y,z)
 				else
 					sprite3D(self.imgs[k],self.quads[k][self.frame],x,y,z,s,r,self.w,self.h)
 					self.iterator = 1

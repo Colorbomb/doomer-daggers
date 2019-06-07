@@ -6,6 +6,8 @@ function create_field(size,ringnum,spokenum)
 	field.update = fieldupdate
 	field.draw = fielddraw
 	field.timer = 0
+	field.depth = 100
+	field.grav = .6
 
 end
 
@@ -23,14 +25,14 @@ function fielddraw(o)
 	end]]--
 	for i=1, o.ringnum do
 		for j=1, o.spokenum do
-			circle3D("fill",o.size*(j/o.spokenum)-o.size/2,o.size*(i/o.ringnum)-o.size/2,100,2,{1,1,1})--*math.cos(o.timer + 2*math.pi*(i/o.ringnum)),1,{1,1,1})
+			circle3D("fill",o.size*(j/o.spokenum)-o.size/2,o.size*(i/o.ringnum)-o.size/2,o.depth,2,{1,1,1})--*math.cos(o.timer + 2*math.pi*(i/o.ringnum)),1,{1,1,1})
 			if i == o.ringnum or i == 1 then
-				line3D(o.size*(j/o.spokenum)-o.size/2,o.size*(i/o.ringnum)-o.size/2,100,o.size*(j/o.spokenum)-o.size/2,o.size*(i/o.ringnum)-o.size/2,50,{1,1,1})
+				line3D(o.size*(j/o.spokenum)-o.size/2,o.size*(i/o.ringnum)-o.size/2,o.depth,o.size*(j/o.spokenum)-o.size/2,o.size*(i/o.ringnum)-o.size/2,o.depth/2,{1,1,1})
 			end
 
 			if j == o.spokenum or j == 1 then
 				if i ~= 1 and i ~= o.ringnum then
-					line3D(o.size*(j/o.spokenum)-o.size/2,o.size*(i/o.ringnum)-o.size/2,100,o.size*(j/o.spokenum)-o.size/2,o.size*(i/o.ringnum)-o.size/2,50,{1,1,1})
+					line3D(o.size*(j/o.spokenum)-o.size/2,o.size*(i/o.ringnum)-o.size/2,o.depth,o.size*(j/o.spokenum)-o.size/2,o.size*(i/o.ringnum)-o.size/2,o.depth/2,{1,1,1})
 				end
 			end
 		end

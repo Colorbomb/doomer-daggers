@@ -7,15 +7,19 @@ function create_list()
 
 		updateall = function(self)
 			for i=1, #self.update do
-				if self.update[i].update ~= nil then
-					self.update[i]:update()
+				if self.update[i] ~= nil then
+					if self.update[i].update ~= nil then
+						self.update[i]:update()
+					end
 				end
 			end
 		end,
 		drawall = function(self)
 			for i=1, #self.draw do
-				if self.draw[i].draw ~= nil then
-					self.draw[i]:draw()
+				if self.draw[i] ~= nil then
+					if self.draw[i].draw ~= nil then
+						self.draw[i]:draw()
+					end
 				end
 			end
 		end,
