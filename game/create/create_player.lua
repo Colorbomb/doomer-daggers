@@ -8,8 +8,8 @@ function create_player()
 	player.velangle = 0
 	player.acceleration = 1
 	player.rad = 30
-	player.sensitivity = {x = 40, y = 40}
-	player.looklimit = math.rad(45)
+	player.sensitivity = {x = 20, y = 20*(16/9)}
+	player.looklimit = math.rad(90)
 	player.color = {1,.3,0}
 	player.update = playerupdate
 	player.draw = playerdraw
@@ -18,7 +18,7 @@ function create_player()
 	player.friction = .1
 	player.jump = 0
 	player.speed = 0
-	player.maxspeed = 4
+	player.maxspeed = 8
 	player.maxspeedorig = 4
 	player.walk = 2
 	player.sprint = player.walk * 2
@@ -26,6 +26,9 @@ end
 
 
 function playerupdate(o)
+	if keyboard.btns.r.pulse == 1 then
+		create_enemy(o.pos.x+math.cos(o.angle)*400,o.pos.y+math.sin(o.angle)*400,o.pos.z)
+	end
 	if keyboard.btns.lshift.down == 1 then
 		o.speed = o.sprint
 	else
@@ -93,7 +96,7 @@ function playerupdate(o)
 	else
 		o.maxspeed = o.maxspeedorig
 	end]]--
-
+	
 	if o.speed > o.maxspeed then
 		o.vel.x = o.maxspeed*math.cos(o.velangle)
 		o.vel.y = o.maxspeed*math.sin(o.velangle)
@@ -135,8 +138,8 @@ end
 
 function playerdraw(o)
 	love.graphics.setColor(1,0,0)
-	love.graphics.print(math.deg(o.angle2),0,0)
-	love.graphics.print(math.deg(o.looklimit),0,10)
+	love.graphics.print("angle2:  "..math.deg(o.angle2),0,0)
+	--love.graphics.print(math.deg(o.looklimit),0,10)
 	--love.graphics.circle("fill",o.pos.x+s.w2,s.h2+o.pos.y,o.rad)
 	love.graphics.setColor(1,1,1)
 	--love.graphics.line(o.pos.x+s.w2,o.pos.y+s.h2,o.pos.x+s.w2 + o.rad*math.cos(o.angle),o.pos.y+s.h2 + o.rad*math.sin(o.angle))
@@ -147,8 +150,14 @@ end
 
 function create_gun()
 	gun = newobj("gun",0)
-	create_crosshair()
+	create_ammocounter()
 	gun.update = gunupdate
+	gun.xoff = 0
+	gun.yoff = 0
+	gun.zoff = 0
+	gun.offset = 50
+	gun.offsetter = 30
+	gun.offsetreal = {x=0,y=0,z=0}
 	gun.draw = gundraw
 	gun.bulletcolors = {
 			{1,.1,0},
@@ -158,12 +167,24 @@ function create_gun()
 		}
 
 	gun.ammo = 4
+
+	create_crosshair()
 end
 
 function gunupdate(o)
+	--o.xoff = player.pos.x --+ offsetter*math.cos(camera.angle) + offsetter*math.sin(camera.angle)
+	--o.yoff = player.pos.y --- offsetter*math.cos(camera.angle) + offsetter*math.sin(camera.angle)
+	--o.zoff = player.pos.z - o.offsetter*math.cos(camera.angle2) -- offsetter*math.sin(camera.angle2)--*(offsetter*math.cos(camera.angle) + offsetter*math.sin(camera.angle))
+	o.offsetreal = {x= player.pos.x+o.offsetter*math.sin(-camera.angle2)*(math.cos(camera.angle)),y= player.pos.y+o.offsetter*math.sin(-camera.angle2)*(math.sin(camera.angle)),z=player.pos.z/2+o.offsetter*math.cos(-camera.angle2)}
+
 	if mouse.button1.pulse == 1 then
 		create_playerbullet(gun.ammo)
 		gun.ammo = gun.ammo - 1	
+		if gun.ammo == 1 then
+			crosshair.color = {1,0,0}
+		else
+			crosshair.color = {1,1,1}
+		end
 		if gun.ammo == 0 then
 			gun.ammo = 4
 		end	
@@ -171,30 +192,42 @@ function gunupdate(o)
 end
 
 function gundraw(o)
-	line(s.w,s.h2*.2,s.w*.6,s.h*.4,5,{1,1,1})
+	--line3D(0,0,0,o.offsetreal.x, o.offsetreal.y, o.offsetreal.z,{1,1,1})
+	--circle3D("fill",o.offsetreal.x,o.offsetreal.y,o.offsetreal.z,4,{1,1,1})
 	--love.graphics.line(0,0,s.w,s.h)
 end
 
 
 function create_playerbullet(bnum)
 	local b = newobj("bullet",1)
-	local offset = 50
+	
 	local speed = 50
 	local size = 10
 	if bnum == 1 then
 		speed = 75
 		size = 5
 	end
-	local randomamount = pi/16
-	local anglefuckhoriz = math.random()
-	local offsetter = -30
-	local xoff = player.pos.x + offsetter*math.cos(camera.angle) + offsetter*math.sin(camera.angle)
-	local yoff = player.pos.y - offsetter*math.cos(camera.angle) + offsetter*math.sin(camera.angle)
-	local zoff = player.pos.z - offsetter*math.cos(camera.angle2) -- offsetter*math.sin(camera.angle2)--*(offsetter*math.cos(camera.angle) + offsetter*math.sin(camera.angle))
+	local randomount = math.pi/128
+	local anglefuck = ((math.random()*2)-1)*randomount
+	local anglefuck2 = ((math.random()*2)-1)*randomount/2.25
+	local damage = 0
 
-	b.pos = {x=xoff+((offset)*math.cos(camera.angle))*math.cos(camera.angle2),y=yoff+(offset*math.sin(camera.angle))*math.cos(camera.angle2),z=zoff/2+(offset)*math.sin(camera.angle2/2.25)}
-	b.vel = {x=speed*math.cos(camera.angle),y=speed*math.sin(camera.angle),z=speed*math.sin(camera.angle2/2.25)}
+
+	if gun.ammo == 1 then
+		anglefuck = 0
+		anglefuck2 = 0
+		damage = 2
+	else
+		damage = 1
+	end
+
+		--print("anglefuck",math.deg(anglefuck))
+
+
+	b.pos = {x=gun.offsetreal.x,y=gun.offsetreal.y--[[+(offset*math.sin(camera.angle))*math.cos(camera.angle2)]],z=gun.offsetreal.z}
+	b.vel = {x=speed*math.cos(camera.angle+anglefuck),y=speed*math.sin(camera.angle+anglefuck),z=speed*math.sin(camera.angle2/2.25 + anglefuck2)}
 	b.num = bnum
+	b.damage = damage
 	b.size = size
 	b.dist = 50
 	b.angle = camera.angle
@@ -270,18 +303,33 @@ end
 
 
 
+function create_ammocounter()
+	amc = newobj("ammo counter",-1)
+	amc.update = ammoupdate
+	amc.draw = ammodraw
+end
+
+function ammoupdate()
+
+end
+
+function ammodraw()
+
+end
 
 
 function create_crosshair()
 	crosshair = newobj("crosshair",1)
-
+	crosshair.pos = {x=s.w2,y=s.h2-gun.offsetter}
+	crosshair.size = 50
 	crosshair.update = crosshairupdate
 	crosshair.draw = crosshairdraw
+	crosshair.color = {1,1,1}
 end
 function crosshairupdate(o)
 end
 function crosshairdraw(o)
-	line(s.w2,s.h2-50,s.w2,s.h2+50,1,{1,1,1})
-	line(s.w2+50,s.h2,s.w2-50,s.h2,1,{1,1,1})
+	line(o.pos.x,o.pos.y-o.size,o.pos.x,o.pos.y+o.size,1,o.color)
+	line(o.pos.x+o.size,o.pos.y,o.pos.x-o.size,o.pos.y,1,o.color)
 	--love.graphics.line(0,0,s.w,s.h)
 end

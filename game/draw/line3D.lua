@@ -37,12 +37,13 @@ function line3D(input_x1,input_y1,input_z1,input_x2,input_y2,input_z2,input_colo
 	local b = math.sqrt(2)
 
 	x1 = s.w2 - s.w*(anglediff1/camera.fov)*(-((b-a)/2)*math.cos(math.rad(anglediff1)*math.pi/math.rad(camera.fov))+(a+b)/2)
-
+	x2 = s.w2 - s.w*(anglediff2/camera.fov)*(-((b-a)/2)*math.cos(math.rad(anglediff2)*math.pi/math.rad(camera.fov))+(a+b)/2)
 	--x1 = s.w2 - s.w*(anglediff1/camera.fov)
 	--x1 = s.w2 - s.w*(anglediff1/camera.fov)*math.abs(1+.4*math.sin(math.rad(anglediff1))^2)
 	--x1 = s.w2 + s.w*math.sin((anglediff1/camera.fov)*math.pi/2)
+	b=b*.7
 	local y1 = s.h2 + input_z1/(distance1) - s.h*(anglediffy1/camera.fov)*(-((b-a)/2)*math.cos(math.rad(anglediffy1)*math.pi/math.rad(camera.fov))+(a+b)/2)
-	x2 = s.w2 - s.w*(anglediff2/camera.fov)*(-((b-a)/2)*math.cos(math.rad(anglediff2)*math.pi/math.rad(camera.fov))+(a+b)/2)
+	
 	--x2 = s.w2 - s.w*(anglediff2/camera.fov)*math.abs(1+.4*math.sin(math.rad(anglediff2))^2)
 	--x2 = s.w2 - s.w*(anglediff2/camera.fov)
 	--x2 = s.w2 + s.w*math.sin((anglediff2/camera.fov)*math.pi/2)

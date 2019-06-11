@@ -1,17 +1,23 @@
 function love.load()
 	require("color_library.initialize.initializer")
+	flash = love.graphics.newShader[[
+	extern float WhiteFactor;
+
+	vec4 effect(vec4 vcolor, Image tex, vec2 texcoord, vec2 pixcoord)
+	{
+	    vec4 outputcolor = Texel(tex, texcoord) * vcolor;
+	    outputcolor.rgb += vec3(WhiteFactor);
+	    return outputcolor;
+	}
+	]]
 	initializer("fullscreen",800,600) -- this line, and the line above, MUST be run in order to access all of the functions in the library.
 	create_collider()
 	create_field(2000,80,80)
 	create_player()
-	for i=1, 1 do
-		create_enemy(100,200*(i-1)-200,100,i)
+	for i=1, 3 do
+		create_enemy(0,100*(i-1)-100*3/2,0)
 	end
 	
-	--create_player2()
-	for i=1, 10 do
-		--create_enemy2(100,10*(i-1),1*(i-1))
-	end
 	
 end
 function love.mousemoved( x, y, dx, dy, istouch )
@@ -32,7 +38,7 @@ function love.draw()
 	list:drawall()
 	--love.graphics.line(s.w2,0,s.w2,s.h)
 	--love.graphics.line(0,s.h2,s.w,s.h2)
-	love.graphics.print(#list.update,0,200)
+	--love.graphics.print(#list.update,0,200)
 end
 
 function love.keypressed(key)

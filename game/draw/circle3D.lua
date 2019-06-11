@@ -36,8 +36,8 @@ function circle3D(input_mode,input_x,input_y,input_z,input_radius,input_color)
 	x = s.w2 - s.w*(anglediff/camera.fov)*(-((b-a)/2)*math.cos(math.rad(anglediff)*math.pi/math.rad(camera.fov))+(a+b)/2)
 	--x = s.w2 + s.w*math.sin((anglediff/camera.fov)*math.pi/2)
 	local y = 0
-	--b=b*.8
-	y = s.h2 + input_z/(distance) - s.h*(anglediffy/camera.fov)*(-((b-a)/2)*math.cos(math.rad(anglediffy)*math.pi/math.rad(camera.fov))+(a+b)/2)
+	b=b*.7
+	y = s.h2 + input_z/(distance) - s.h*(anglediffy/(camera.fov))*(-((b-a)/2)*math.cos(math.rad(anglediffy)*math.pi/math.rad(camera.fov))+(a+b)/2)
 	if keyboard.btns.t.down == 1 then
 		y = s.h2 + input_z/actualdist
 	end
@@ -56,6 +56,7 @@ function circle3D(input_mode,input_x,input_y,input_z,input_radius,input_color)
 		love.graphics.circle(mode,x,y,size,subs)
 		--love.graphics.print()
 	end
+
 end
 
 

@@ -1,6 +1,7 @@
 function loadsprite(spritename)
 	if spritename == "enemy" then
 		local sprite = {
+			base = love.graphics.newImage("sprites/enemy/idle/base.png"),
 			animations = {
 				idle = loadanim("sprites/enemy/idle",1),
 				walk = loadanim("sprites/enemy/walk",2),
@@ -36,7 +37,7 @@ function loadanim(filepath,numframes)
 			frame = 1,
 			iterator = 1,
 			rate = 10,
-			anim = function(self,angle,x,y,z,r,s,speed)
+			anim = function(self,angle,x,y,z,r,s,speed,flash)
 				local viewangle = (math.atan2((camera.pos.y - y),(camera.pos.x - x))%(2*math.pi)-(angle))%(2*math.pi)
 				--local viewangle2 = math.atan2((camera.pos.y - y),(camera.pos.x - x))%(2*math.pi) - (camera.angle)%(2*math.pi)
 				--viewangle = viewangle
@@ -58,10 +59,10 @@ function loadanim(filepath,numframes)
 					if self.frame > #self.quads then
 						self.frame = 1
 					end
-					sprite3D(self.imgs[k],self.quads[k][self.frame],x,y,z,s,r,self.w,self.h)
+					sprite3D(self.imgs[k],self.quads[k][self.frame],x,y,z,s,r,self.w,self.h,flash)
 					--printer3D(math.deg(viewangle),x,y,z)
 				else
-					sprite3D(self.imgs[k],self.quads[k][self.frame],x,y,z,s,r,self.w,self.h)
+					sprite3D(self.imgs[k],self.quads[k][self.frame],x,y,z,s,r,self.w,self.h,flash)
 					self.iterator = 1
 				end
 			end,
